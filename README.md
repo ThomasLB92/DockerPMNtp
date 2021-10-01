@@ -29,6 +29,6 @@ To get started with the project :
 
 - Open Cmd or Git Bash
 - Use command docker-compose up -d
-
+- Open your navigator and open localhost:8000
 
 Made By Alexis Fonteneau and Thomas Le Bot
