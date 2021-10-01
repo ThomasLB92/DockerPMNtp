@@ -1,0 +1,98 @@
+# Version de docker-compose utilisé
+version: '3.3'
+
+# Liste des conteneurs qui seront créé
+services:
+
+  # Allias du conteneur
+  mariadb:
+
+    # Nom du conteneur qui sera créé 
+    container_name: mariadb
+
+    # Image utilisé pour créer le conteneur
+    image: mariadb:latest
+
+    # Mapper les ports entre le conteneur et la machine hôte
+    ports:
+      - "3306:3306"
+
+    # Variable d'environnement ajouté au conteneur
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: tpDocker
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+
+    # Comportement du conteneur en cas de crash
+    restart: always
+
+    # Emplacement où seront stockées les données du conteneur
+    volumes:
+      -  db_data:/var/lib/mysql
+
+  # Allias du conteneur
+  phpmyadmin:
+
+    # Nom du conteneur qui sera créé 
+    container_name: phpmyadmin
+
+    # Image utilisé pour créer le conteneur
+    image: phpmyadmin:latest
+
+    # Mapper les ports entre le conteneur et la machine hôte
+    ports:
+      - "8080:80"
+
+    # Liste des conteneur dont celui-ci dépend
+    links:
+      - mariadb
+
+    # Variable d'environnement ajouté au conteneur
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=127.0.0.1
+      - PMA_PORT=3306
+
+    # Comportement du conteneur en cas de crash
+    restart: always
+
+    # Emplacement où seront stockées les données du conteneur
+    volumes:
+      - /sessions
+
+  # Allias du conteneur
+  wordpress:
+
+    # Nom du conteneur qui sera créé 
+    container_name: wordpress
+
+    # Image utilisé pour créer le conteneur
+    image: wordpress:latest
+
+    # Mapper les ports entre le conteneur et la machine hôte
+    ports:
+      - "8000:80"
+
+    # Liste des conteneur dont celui-ci dépend
+    links:
+      - mariadb
+
+    # Variable d'environnement ajouté au conteneur
+    environment:
+      WORDPRESS_DB_HOST: mariadb
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: root
+      WORDPRESS_DB_NAME: tpDocker
+
+    # Comportement du conteneur en cas de crash
+    restart: always
+
+    # Emplacement où seront stockées les données du conteneur
+    volumes:
+      - wordpress_data:/var/www/html
+
+# Initialisation des stockages pour les conteneurs
+volumes:
+  db_data: {}
+  wordpress_data: {}
