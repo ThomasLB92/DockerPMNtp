@@ -1,98 +1,51 @@
-# Version de docker-compose utilisé
-version: '3.3'
+version: '3.3' #Set Docker-compose version
 
-# Liste des conteneurs qui seront créé
-services:
+services: #List of services / containers
+  mariadb: #Define container's name in that file
+    container_name: mariadb #Set container's name in docker
+    image: mariadb:latest #Set image used (latest mariaDB image)
+    volumes: #Set name and path for persisting datas
+      -  mariadb_data:/var/lib/mysql
+    restart: always #Set container's behavior when crashed (automatically restart)
+    environment: #List of environment variable in that container
+      MYSQL_ROOT_PASSWORD: tpgrp1 #Set root password
+      MYSQL_DATABASE: tp_docker #Set database's name
+      MYSQL_USER: user #Set an user
+      MYSQL_PASSWORD: tpgrp1 #Set the password of MYSQL_USER
 
-  # Allias du conteneur
-  mariadb:
-
-    # Nom du conteneur qui sera créé 
-    container_name: mariadb
-
-    # Image utilisé pour créer le conteneur
-    image: mariadb:latest
-
-    # Mapper les ports entre le conteneur et la machine hôte
-    ports:
-      - "3306:3306"
-
-    # Variable d'environnement ajouté au conteneur
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: tpDocker
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root
-
-    # Comportement du conteneur en cas de crash
-    restart: always
-
-    # Emplacement où seront stockées les données du conteneur
-    volumes:
-      -  db_data:/var/lib/mysql
-
-  # Allias du conteneur
-  phpmyadmin:
-
-    # Nom du conteneur qui sera créé 
-    container_name: phpmyadmin
-
-    # Image utilisé pour créer le conteneur
-    image: phpmyadmin:latest
-
-    # Mapper les ports entre le conteneur et la machine hôte
-    ports:
-      - "8080:80"
-
-    # Liste des conteneur dont celui-ci dépend
-    links:
+  wordpress: #Define container's name in that file
+    container_name: wordpress #Set container's name in docker
+    depends_on: #Container's names which that one depends
       - mariadb
-
-    # Variable d'environnement ajouté au conteneur
-    environment:
-      - PMA_ARBITRARY=1
-      - PMA_HOST=127.0.0.1
-      - PMA_PORT=3306
-
-    # Comportement du conteneur en cas de crash
-    restart: always
-
-    # Emplacement où seront stockées les données du conteneur
-    volumes:
-      - /sessions
-
-  # Allias du conteneur
-  wordpress:
-
-    # Nom du conteneur qui sera créé 
-    container_name: wordpress
-
-    # Image utilisé pour créer le conteneur
-    image: wordpress:latest
-
-    # Mapper les ports entre le conteneur et la machine hôte
-    ports:
-      - "8000:80"
-
-    # Liste des conteneur dont celui-ci dépend
-    links:
-      - mariadb
-
-    # Variable d'environnement ajouté au conteneur
-    environment:
-      WORDPRESS_DB_HOST: mariadb
-      WORDPRESS_DB_USER: root
-      WORDPRESS_DB_PASSWORD: root
-      WORDPRESS_DB_NAME: tpDocker
-
-    # Comportement du conteneur en cas de crash
-    restart: always
-
-    # Emplacement où seront stockées les données du conteneur
-    volumes:
+    image: wordpress:latest #Set image used (latest wordpress image)
+    volumes: #Set name and path for persisting datas
       - wordpress_data:/var/www/html
+    ports: #Map ports between host machine and container
+      - "8000:80"
+    restart: always #Set container's behavior when crashed (automatically restart)
+    environment: #List of environment variable in that container
+      WORDPRESS_DB_HOST: mariadb:3306 #Set database container name and port 
+      WORDPRESS_DB_USER: user #Set user
+      WORDPRESS_DB_PASSWORD: tpgrp1 #Set password
+      WORDPRESS_DB_NAME: tp_docker #Set database's name
 
-# Initialisation des stockages pour les conteneurs
-volumes:
-  db_data: {}
+  phpmyadmin: #Define container's name in that file
+    container_name: phpmyadmin #Set container's name in docker
+    depends_on: #Container's names which that one depends
+      - mariadb
+    image: phpmyadmin:latest #Set image used (latest phpmyadmin image)
+    volumes: #Set name and path for persisting datas
+      - phpmyadmin_data:/var/www/html
+    ports: #Map ports between host machine and container
+      - "8080:80"
+    restart: always #Set container's behavior when crashed (automatically restart)
+    environment: #List of environment variable in that container
+      PHPMYADMIN_ROOT_PASSWORD: tpgrp1 #Set root password
+      PHPMYADMIN_USER: user #Set user
+      PHPMYADMIN_DATABASE: tp_docker #Set database's name
+      PMA_HOST: mariadb #define host name of the MySQL server
+
+volumes: #Initialize containers's volumes
+  mariadb_data: {}
   wordpress_data: {}
+  phpmyadmin_data: {}
