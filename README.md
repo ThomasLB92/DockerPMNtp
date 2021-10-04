@@ -1,7 +1,7 @@
-TP1_docker
+# TP1_docker
 
-Create a simple blog with Wordpress or Use an existing Wordpress Project
-Create a development environment for the project
+Create a simple blog with Wordpress or Use an existing Wordpress Project.
+Create a development environment for the project.
 
 Obligations
 
@@ -25,11 +25,31 @@ Services :
 	SSL certificat (Let's Encrypt) ⚠️ You need a domain name
 
 
-To get started :
+# To get started :
 
 - Open Cmd or Git Bash
 - Use command git clone https://github.com/ThomasLB92/DockerPMNtp.git
-- Use command docker-compose up -d
-- Open your navigator and open localhost:8000 to access Wordpress
 
-Made By Alexis Fonteneau and Thomas Le Bot
+
+# Run the project :
+
+- In cmd, use command docker-compose up -d
+- Open your browser and type :
+		- http://localhost:8000/ to access Wordpress
+		- http://localhost:8080/ to access Database
+
+
+# Versions
+
+wordpress:latest
+mariadb:latest
+phpmyadmin:latest
+
+# Authors
+
+- Alexis Fonteneau alias @qippa
+- Thomas Le Bot alias @ThomasLB92
+
+# License
+
+This project is under MIT License
